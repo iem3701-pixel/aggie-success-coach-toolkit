@@ -15,9 +15,9 @@
   color-scheme: dark;
   --bg:#0a0b0d; --surface:#111317; --surface-2:#1a1d22; --line:#262a31; --grid:#1d2026;
   --text:#e9ecf1; --text-2:#a9b0bb; --text-3:#7d8591;
-  --accent:#3987e5; --accent-ink:#ffffff; --accent-soft:#16263b;
-  --series-1:#3987e5; --band:rgba(57,135,229,.16);
-  --good:#3fb950; --warn:#d29922; --danger:#f06a6a;
+  --accent:#3fd07a; --accent-ink:#04110a; --accent-soft:#0f2519;
+  --series-1:#3fd07a; --band:rgba(63,208,122,.14);
+  --good:#3fd07a; --warn:#f0b429; --danger:#f06a6a;
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
   --r: 8px;
 }
@@ -164,7 +164,7 @@ h2{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacin
 .tile .v{font-weight:600}
 .daysum{font-size:12px}
 .chip{border-radius:4px;font-size:12px}
-.chip.p{background:var(--accent-soft);color:#cfe3ff;box-shadow:inset 0 0 0 1px rgba(57,135,229,.35)}
+.chip.p{background:var(--accent-soft);color:#c9f5da;box-shadow:inset 0 0 0 1px rgba(63,208,122,.35)}
 .card{background:var(--surface);border-color:var(--line)}
 .btn.primary{letter-spacing:.02em}
 .seg button{border-radius:4px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
@@ -176,12 +176,34 @@ nav.tabs button{font-size:10px}
 .timer.done .in{background:#0f2a17;border-color:var(--good);color:var(--text)}
 .bar{border-radius:0 2px 2px 0}.bar .fill{border-radius:0 2px 2px 0}
 #tip{background:#e9ecf1;color:#0a0b0d;font-family:var(--mono);font-size:12px}
+/* HUD */
+.btn,.pick .nm{font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;font-size:14px}
+.btn.big{font-size:15px}
+.btn.outline{background:transparent;border:1px dashed var(--accent);color:var(--accent)}
+.card{position:relative}
+.card::before,.card::after{content:"";position:absolute;width:10px;height:10px;pointer-events:none;border-color:var(--accent);opacity:.55}
+.card::before{top:-1px;left:-1px;border-top:2px solid;border-left:2px solid;border-top-left-radius:var(--r)}
+.card::after{bottom:-1px;right:-1px;border-bottom:2px solid;border-right:2px solid;border-bottom-right-radius:var(--r)}
+h3::before,h2::before{content:"// ";color:var(--accent)}
+.ex h3::before{content:none}
+.top h1::before{content:"■ ";color:var(--accent);font-size:12px;vertical-align:3px}
+.top .sub{color:var(--accent);opacity:.85}
+.hint{border-left:2px solid var(--line)}
+.hint.up{border-left-color:var(--good)}.hint.down{border-left-color:var(--warn)}.hint.same,.hint.new{border-left-color:var(--text-3)}
+.hint .k{font-family:var(--mono);font-size:12px;letter-spacing:.08em}
+.hint .same,.hint .new{color:var(--text)}
+.sets .n{font-family:var(--mono);color:var(--accent);width:28px}
+.stepper button{width:52px;font-size:24px}
+.stepper{min-height:60px}
+.stepper input{font-size:24px}
+.pick .nm{font-size:14px}
+.datepick{font-family:var(--mono);letter-spacing:.06em}
 #toast{background:var(--surface-2);color:var(--text);border:1px solid var(--line)}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><div><h1 id="title">Lift Log</h1><div class="sub" id="subtitle"></div></div></div>
+  <div class="top"><div><h1 id="title">LIFT/LOG</h1><div class="sub" id="subtitle"></div></div></div>
   <main id="view"></main>
 </div>
 
@@ -318,16 +340,17 @@ const pad = n => String(n).padStart(2, '0');
 const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const dayNum = s => { const [y, m, d] = s.split('-').map(Number); return Math.round(Date.UTC(y, m - 1, d) / 864e5); };
 const numToStr = n => { const d = new Date(n * 864e5); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`; };
+const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+const DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 function fmtDate(s, long) {
   const [y, m, d] = s.split('-').map(Number);
-  const opt = long ? { weekday: 'short', month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric' };
-  if (y !== new Date().getFullYear()) opt.year = 'numeric';
-  return new Date(y, m - 1, d).toLocaleDateString(undefined, opt);
+  const out = `${pad(d)} ${MON[m - 1]}${y !== new Date().getFullYear() ? ' ' + String(y).slice(2) : ''}`;
+  return long ? DOW[new Date(y, m - 1, d).getDay()] + ' ' + out : out;
 }
 function dayTitle(s) {
   const diff = dayNum(todayStr()) - dayNum(s);
   const base = fmtDate(s, true);
-  return diff === 0 ? 'Today · ' + base : diff === 1 ? 'Yesterday · ' + base : base;
+  return diff === 0 ? 'TODAY · ' + base : diff === 1 ? 'YDAY · ' + base : base;
 }
 const fmtN = n => (Math.round(n * 10) / 10).toLocaleString(undefined, { maximumFractionDigits: 1 });
 const fmtW = w => w === 0 ? 'bodyweight' : `${fmtN(w)} ${S.unit}`;
@@ -428,7 +451,7 @@ function render() {
   hideTip();
   renderTabs();
   const v = $('#view');
-  $('#subtitle').textContent = ui.tab === 'log' ? 'Tap + to log a lift' : TAB_NAMES[ui.tab];
+  $('#subtitle').textContent = `${TAB_NAMES[ui.tab].toUpperCase()} // ${fmtDate(todayStr())} ${new Date().getFullYear()}`;
   if (ui.tab === 'log') v.innerHTML = renderLog();
   else if (ui.tab === 'history') v.innerHTML = renderHistory();
   else if (ui.tab === 'progress') { v.innerHTML = renderProgress(); drawProgress(); }
@@ -451,19 +474,19 @@ function renderLog() {
   }
   entries.forEach((e, i) => { h += exCard(e, i); });
   if (!entries.length) h += `<div class="empty">No lifts logged for this day yet.<br>Tap <b>Add exercise</b> to start.</div>`;
-  h += `<button class="btn primary big" data-act="openPicker" style="margin-top:12px">+ Add exercise</button>`;
+  h += `<button class="btn big outline" data-act="openPicker" style="margin-top:12px">+ Add exercise</button>`;
   return h;
 }
 function exCard(e, i) {
   const ex = EX(e.ex), [lo, hi] = rangeOf(ex), sg = suggest(e.ex, ui.date);
   const d = drafts[e.ex] || (e.sets.length ? { ...e.sets[e.sets.length - 1] } : { w: sg.w, r: sg.r });
-  const mark = { up: '↑', down: '↓', same: '→', new: '★' }[sg.kind];
+  const mark = { up: '▲ ADVANCE', down: '▼ DELOAD', same: '► PUSH REPS', new: '◆ NEW LIFT' }[sg.kind];
   const muscles = `<b>${esc(ex.p.join(', '))}</b>${ex.s.length ? ' · ' + esc(ex.s.join(', ')) : ''}`;
-  const sets = e.sets.map((s, j) => `<li><span class="n">${j + 1}</span><span class="v">${s.w === 0 ? 'BW' : fmtN(s.w) + ' ' + S.unit} × ${s.r} <span class="e">${s.w && s.r ? '· est. max ' + fmtN(Math.round(e1rm(s))) : ''}</span></span><button class="icon flat" data-act="rmSet" data-i="${i}" data-j="${j}" aria-label="Delete set ${j + 1}">✕</button></li>`).join('');
+  const sets = e.sets.map((s, j) => `<li><span class="n">${pad(j + 1)}</span><span class="v">${s.w === 0 ? 'BW' : fmtN(s.w) + ' ' + S.unit} × ${s.r} <span class="e">${s.w && s.r ? '· est. max ' + fmtN(Math.round(e1rm(s))) : ''}</span></span><button class="icon flat" data-act="rmSet" data-i="${i}" data-j="${j}" aria-label="Delete set ${j + 1}">✕</button></li>`).join('');
   return `<section class="card ex" id="card-${i}">
     <header><div class="grow"><h3>${esc(ex.n)}</h3><div class="tags">${muscles}</div></div>
       <button class="icon flat" data-act="rmEntry" data-i="${i}" aria-label="Remove ${esc(ex.n)}">✕</button></header>
-    <div class="hint"><span class="k ${sg.kind}">${mark}</span> ${esc(sg.text)}
+    <div class="hint ${sg.kind}"><div class="k ${sg.kind}">${mark}</div>${esc((t => t[0].toUpperCase() + t.slice(1))(sg.text.replace(/^[^:]+: /, '')))}
       ${sg.lastLine ? `<div class="last">${esc(sg.lastLine)}</div>` : ''}
       <div class="last">Goal: ${lo}–${hi} reps · <button data-act="range" data-ex="${esc(e.ex)}">change</button></div></div>
     ${sets ? `<ol class="sets">${sets}</ol>` : ''}
@@ -474,7 +497,7 @@ function exCard(e, i) {
       <div class="stepper"><button data-act="step" data-i="${i}" data-f="r" data-d="-1" aria-label="Fewer reps">−</button>
         <div class="f"><input id="r-${i}" data-ex="${esc(e.ex)}" data-f="r" type="number" inputmode="numeric" step="1" min="0" value="${d.r}"><label for="r-${i}">reps</label></div>
         <button data-act="step" data-i="${i}" data-f="r" data-d="1" aria-label="More reps">+</button></div>
-      <button class="btn primary add" data-act="addSet" data-i="${i}">Add set ${e.sets.length + 1}</button>
+      <button class="btn primary add" data-act="addSet" data-i="${i}">+ Log set ${pad(e.sets.length + 1)}</button>
     </div></section>`;
 }
 
@@ -827,12 +850,12 @@ function startTimer(sec) {
 function tickTimer() {
   const left = Math.round((timerEnd - Date.now()) / 1000);
   if (left <= 0) {
-    $('#timerText').textContent = 'Rest done. Next set!';
+    $('#timerText').textContent = 'REST COMPLETE · GO';
     if (!$('#timer').classList.contains('done')) { $('#timer').classList.add('done'); try { navigator.vibrate && navigator.vibrate(300); } catch (e) {} }
     if (left < -20) stopTimer();
     return;
   }
-  $('#timerText').textContent = `Rest ${Math.floor(left / 60)}:${pad(left % 60)}`;
+  $('#timerText').textContent = `REST T-${Math.floor(left / 60)}:${pad(left % 60)}`;
 }
 function stopTimer() { clearInterval(timerInt); $('#timer').hidden = true; }
 
