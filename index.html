@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f2439">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Coach Toolkit">
 <title>Aggie Success Coach Toolkit</title>
 <style>
   :root{
@@ -183,6 +186,63 @@
     .grid,.two,.resources-strip{grid-template-columns:1fr}
     .section-head{align-items:stretch;flex-direction:column}
     .search{width:100%}
+  }
+  /* ---------- iPhone / phone layout ---------- */
+  html{-webkit-text-size-adjust:100%}
+  button,.card,.chip,.quicklink,.btn{touch-action:manipulation}
+  body:has(dialog[open]){overflow:hidden}
+  dialog{max-height:88dvh}
+  .modal-body{max-height:calc(88dvh - 105px)}
+  @media(hover:none){
+    .btn:hover,.card:hover{transform:none}
+    .card:hover{box-shadow:0 5px 16px rgba(15,36,57,.05);border-color:var(--line)}
+    .card:active{background:#f3f7fa;border-color:#b8cad9}
+  }
+  @media(max-width:620px){
+    .topbar{position:static;padding:12px 14px}
+    .topbar-inner{flex-wrap:wrap;align-items:center;gap:10px}
+    .mark{width:36px;height:36px;border-radius:10px;font-size:.8rem}
+    .brand h1{font-size:1rem}
+    .top-actions{width:100%;flex-wrap:nowrap}
+    .top-actions .btn{flex:1;min-height:44px;padding:8px 10px;font-size:.92rem}
+    main{padding:14px 14px 48px}
+    .hero{padding:20px 18px;border-radius:20px;gap:14px}
+    .hero h2{font-size:1.75rem;margin-bottom:8px}
+    .hero p{font-size:.98rem;margin:0}
+    .hero-side{padding:12px 14px;border-radius:14px;font-size:.92rem}
+    .hero-side strong{margin-bottom:4px}
+    .section-head{margin:22px 0 12px;gap:10px}
+    .section-head h3{font-size:1.25rem}
+    .search{padding:12px;font-size:16px}
+    .chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -14px 14px;padding:0 14px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex:none;min-height:40px}
+    .grid{gap:10px}
+    .card{min-height:0;padding:14px;display:grid;grid-template-columns:40px 1fr;column-gap:12px;align-items:start;border-radius:14px}
+    .card .icon{width:40px;height:40px;margin:0;grid-row:1 / span 2;font-size:1.15rem}
+    .card h4{margin:1px 0 3px;font-size:1rem}
+    .card p{font-size:.88rem;line-height:1.35}
+    .card .tag{display:none}
+    .workspace{margin-top:24px;padding:18px;border-radius:18px}
+    .step{min-height:44px;align-items:center}
+    .step input{width:22px;height:22px;margin:0;flex:none}
+    .actionbar .btn{flex:1;min-height:44px}
+    textarea{font-size:16px}
+    .resources-strip{margin-top:0;gap:10px}
+    /* Bottom-sheet pop-up, resources first */
+    dialog{width:100%;max-width:100%;margin:auto 0 0;border-radius:20px 20px 0 0;max-height:92dvh}
+    dialog[open]{display:flex;flex-direction:column}
+    .modal-head{padding:16px 16px 14px;flex:none}
+    .modal-head h3{font-size:1.3rem}
+    .modal-head p{font-size:.92rem}
+    .close{width:44px;height:44px;flex:none}
+    .modal-body{display:flex;flex-direction:column;flex:1;min-height:0;max-height:none;padding:14px 16px calc(20px + env(safe-area-inset-bottom))}
+    .modal-body > h4{order:1;margin:0 0 2px !important}
+    #modalResources{order:2;margin-bottom:16px}
+    .modal-body > .two{order:3;gap:12px}
+    .modal-body > .actionbar{order:4}
+    .resource{padding:12px;margin-top:8px}
+    .resource .btn{min-height:44px}
   }
 </style>
 </head>
