@@ -1,0 +1,342 @@
+<title>Peer Coach Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#1b2230; --muted:#5b6475; --line:#dde1e8;
+  --accent:#2c5a86; --accent-soft:#e6eef6;
+  --rw-bg:#e3f2e8; --rw-fg:#1d6b3a;
+  --ro-bg:#e4edf8; --ro-fg:#24558a;
+  --dr-bg:#fbf0dc; --dr-fg:#8a5a10;
+  --no-bg:#fbe5e3; --no-fg:#9a2c22;
+  --ns-bg:#eceef2; --ns-fg:#555e6e;
+  --display:"Fraunces",Georgia,serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#12161d; --surface:#1a2029; --ink:#e6e9ef; --muted:#9aa3b3; --line:#2c3441;
+    --accent:#8db8e3; --accent-soft:#1f2c3b;
+    --rw-bg:#173424; --rw-fg:#8fd6a8; --ro-bg:#1a2c42; --ro-fg:#9cc3ee;
+    --dr-bg:#382a12; --dr-fg:#f0c77a; --no-bg:#3d1c19; --no-fg:#f2a49b;
+    --ns-bg:#262c36; --ns-fg:#aab2c0;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#12161d; --surface:#1a2029; --ink:#e6e9ef; --muted:#9aa3b3; --line:#2c3441;
+  --accent:#8db8e3; --accent-soft:#1f2c3b;
+  --rw-bg:#173424; --rw-fg:#8fd6a8; --ro-bg:#1a2c42; --ro-fg:#9cc3ee;
+  --dr-bg:#382a12; --dr-fg:#f0c77a; --no-bg:#3d1c19; --no-fg:#f2a49b;
+  --ns-bg:#262c36; --ns-fg:#aab2c0;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding:0 16px}
+.wrap{max-width:1040px;margin:0 auto;padding-block:32px 64px;display:flex;flex-direction:column;gap:40px}
+header{display:flex;flex-direction:column;gap:10px}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:600 clamp(30px,5vw,42px)/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:600 24px/1.2 var(--display);margin:0;text-wrap:balance}
+h3{font:600 15px var(--body);margin:0}
+p{margin:0;max-width:68ch}
+.lede{color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav a{font:500 13px var(--body);color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:999px;text-decoration:none}
+nav a:hover,nav a:focus-visible{text-decoration:underline}
+section{display:flex;flex-direction:column;gap:16px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--muted)}
+.chip{display:inline-block;font:500 12px var(--mono);padding:3px 9px;border-radius:6px;white-space:nowrap}
+.rw{background:var(--rw-bg);color:var(--rw-fg)} .ro{background:var(--ro-bg);color:var(--ro-fg)}
+.dr{background:var(--dr-bg);color:var(--dr-fg)} .no{background:var(--no-bg);color:var(--no-fg)}
+.ns{background:var(--ns-bg);color:var(--ns-fg)}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line)}
+th{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td .note{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+a{color:var(--accent)}
+.missing{color:var(--muted);font-style:italic;font-size:13px}
+.rules{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.rules ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.panel ul,.panel ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.step .time{font:500 12px var(--mono);color:var(--accent)}
+.step ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.template{font:500 13px var(--mono);background:var(--accent-soft);border-radius:8px;padding:12px 14px;display:grid;grid-template-columns:max-content 1fr;gap:4px 14px}
+.template span:nth-child(odd){color:var(--accent)}
+footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Utah State · Peer Success Coach</div>
+    <h1>Isaac's Peer Coach Hub</h1>
+    <p class="lede">Everything for the job in one place: the systems you use, what Claude is allowed to do in each one, how a coaching meeting runs, and what's on your plate this semester.</p>
+    <nav aria-label="Sections">
+      <a href="#systems">Systems &amp; access</a>
+      <a href="#rules">Ground rules</a>
+      <a href="#sop">Meeting SOP</a>
+      <a href="#toolkit">Coaching toolkit</a>
+      <a href="#work">Work structure</a>
+      <a href="#todo">Links to add</a>
+    </nav>
+  </header>
+
+  <section id="systems">
+    <h2>Systems &amp; access</h2>
+    <div class="legend">
+      <span><span class="chip rw">Read &amp; write</span></span>
+      <span><span class="chip ro">Read only</span></span>
+      <span><span class="chip dr">Drafts only</span></span>
+      <span><span class="chip no">No access</span></span>
+      <span><span class="chip ns">Not set</span> Claude stays out until you decide</span>
+    </div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>System</th><th>What it's for</th><th>Claude can</th><th>Link</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><h3>Peer Success Coach folder</h3><span class="note">Google Drive</span></td>
+            <td>Your meeting prep, meeting notes, work notes</td>
+            <td><span class="chip rw">Read &amp; write</span><span class="note">Organize, rename, create docs</span></td>
+            <td><a href="https://drive.google.com/drive/folders/1L-B7Wrq5UHjPPbuL0RoQNZXunAoh0h-X" target="_blank" rel="noopener">Open folder</a></td>
+          </tr>
+          <tr>
+            <td><h3>Claude folder</h3><span class="note">Mac · Documents/Claude</span></td>
+            <td>Workflow plan, templates. Public repo: no student info</td>
+            <td><span class="chip rw">Read &amp; write</span></td>
+            <td><span class="missing">On your computer</span></td>
+          </tr>
+          <tr>
+            <td><h3>Gmail</h3></td>
+            <td>Follow-up emails to students after meetings</td>
+            <td><span class="chip dr">Drafts only</span><span class="note">You review and hit send</span></td>
+            <td><a href="https://mail.google.com" target="_blank" rel="noopener">Open Gmail</a></td>
+          </tr>
+          <tr>
+            <td><h3>Google Calendar</h3></td>
+            <td>Meetings, availability, follow-up dates</td>
+            <td><span class="chip ro">Read only</span><span class="note">Adds events only when you ask</span></td>
+            <td><a href="https://calendar.google.com" target="_blank" rel="noopener">Open Calendar</a></td>
+          </tr>
+          <tr>
+            <td><h3>Coaching Appt Record</h3><span class="note">USU Box · team spreadsheet</span></td>
+            <td>The team's shared record of past coaching meetings, for you and everyone on the team to look back on</td>
+            <td><span class="chip ro">Read only</span><span class="note">Never edit. Never save, copy or store its data anywhere, including this page. Supervisor permission confirmed by Isaac, 27 Sep 2026.</span></td>
+            <td><a href="https://usu.app.box.com/file/2468632731761" target="_blank" rel="noopener">Open in Box</a></td>
+          </tr>
+          <tr>
+            <td><h3>Appointment page</h3></td>
+            <td>Where students book you; your availability and profile</td>
+            <td><span class="chip ns">Not set</span></td>
+            <td><span class="missing">Link needed</span></td>
+          </tr>
+          <tr>
+            <td><h3>Meeting summary system</h3></td>
+            <td>Where post-meeting summaries get logged</td>
+            <td><span class="chip ns">Not set</span></td>
+            <td><span class="missing">Name &amp; link needed</span></td>
+          </tr>
+          <tr>
+            <td><h3>Canvas course</h3></td>
+            <td>Peer coach course to review</td>
+            <td><span class="chip ns">Not set</span></td>
+            <td><span class="missing">Link needed</span></td>
+          </tr>
+          <tr>
+            <td><h3>Banner</h3></td>
+            <td>Student records system</td>
+            <td><span class="chip ns">Not set</span></td>
+            <td><span class="missing">Link needed</span></td>
+          </tr>
+          <tr>
+            <td><h3>Modern Campus / Academic Hub pages</h3></td>
+            <td>Web page projects</td>
+            <td><span class="chip ns">Not set</span></td>
+            <td><span class="missing">Link needed</span></td>
+          </tr>
+          <tr>
+            <td><h3>Big Blue EdSights</h3></td>
+            <td>Mentioned in a team meeting</td>
+            <td><span class="chip ns">Not set</span></td>
+            <td><span class="missing">Link needed</span></td>
+          </tr>
+          <tr>
+            <td><h3>MyUSU</h3></td>
+            <td>Ask your supervisor about access</td>
+            <td><span class="chip ns">Not set</span></td>
+            <td><a href="https://my.usu.edu" target="_blank" rel="noopener">my.usu.edu</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="rules">
+    <h2>Ground rules</h2>
+    <div class="rules">
+      <ul>
+        <li><strong>Nothing sends or submits on its own.</strong> Emails are drafts and forms are filled in but not submitted. You review and click the final button.</li>
+        <li><strong>Read only means read only.</strong> For the Coaching Appt Record, Claude looks but never edits, saves or copies its data.</li>
+        <li><strong>"Not set" means hands off.</strong> Claude doesn't open a system until you set its access level here.</li>
+        <li><strong>No student information on this page.</strong> Names, grades and meeting notes stay in their own systems and folders.</li>
+        <li><strong>Record only with consent.</strong> Ask "I'm going to record this for my notes, is that okay?"</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="sop">
+    <h2>Meeting SOP</h2>
+    <p class="lede">A 30-minute meeting, taken from how you ran your September meetings. Scope: executive functioning, meaning time management, organization, study habits and self-care. Academic tutoring and class selection get referred out.</p>
+    <div class="flow">
+      <div class="step">
+        <div class="time">Before</div>
+        <h3>Prep</h3>
+        <ul>
+          <li>Read what they said they want to work on</li>
+          <li>Brain dump: likely causes and ideas</li>
+          <li>Pick 3–4 iceberg questions</li>
+          <li>Returning student: pull up last plan</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="time">0–3 min</div>
+        <h3>Get to know them</h3>
+        <ul>
+          <li>Smile, introduce yourself</li>
+          <li>Where are you from? What brought you to Logan? Major?</li>
+          <li>Returning: "How did the plan go? What worked?"</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="time">3–5 min</div>
+        <h3>Explain what we do</h3>
+        <ul>
+          <li>Talk and come up with ideas</li>
+          <li>Narrow to the one with the highest payoff, something to start today</li>
+          <li>Make a plan and an accountability plan</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="time">5–15 min</div>
+        <h3>Iceberg</h3>
+        <ul>
+          <li>What does success look like?</li>
+          <li>What are you doing well already?</li>
+          <li>What's the biggest difficulty right now?</li>
+          <li>What changed? How are you spending your time?</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="time">15–27 min</div>
+        <h3>Pick one and plan it</h3>
+        <ul>
+          <li>Choose one idea from the toolkit</li>
+          <li>Fill in the plan template below</li>
+          <li>Set when and how you'll check in</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="time">After</div>
+        <h3>Follow through</h3>
+        <ul>
+          <li>Email recap: what we discussed, the plan, links</li>
+          <li>Log summary in the USU system and the Coaching Appt Record</li>
+          <li>Send the promised check-in message</li>
+          <li>Meet again in about 2 weeks</li>
+        </ul>
+      </div>
+    </div>
+    <div class="template" aria-label="Plan template">
+      <span>Goal</span><span>What they want, in their words</span>
+      <span>Habits</span><span>The specific behavior they'll do</span>
+      <span>Mindsets</span><span>The belief or reframe that supports it</span>
+      <span>Plan</span><span>What, when, where</span>
+      <span>Accountability</span><span>Who checks in, how, and when</span>
+    </div>
+  </section>
+
+  <section id="toolkit">
+    <h2>Coaching toolkit</h2>
+    <div class="grid">
+      <div class="panel">
+        <h3>Strategies you use</h3>
+        <ul>
+          <li><strong>Office hours plan:</strong> make a success plan for each class, take it to the professor for feedback, ask about UTFs and TAs</li>
+          <li><strong>Lock-in study routine</strong> with the Pomodoro technique and music</li>
+          <li><strong>Body doubling:</strong> study alongside someone for accountability</li>
+          <li><strong>Calendar setup:</strong> class schedule plus homework blocks in Google Calendar</li>
+          <li><strong>Beat procrastination:</strong> "just start" and break work into smaller steps so success is guaranteed</li>
+          <li><strong>Balance and fun:</strong> do something you love every day and put campus events on the calendar</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Note-taking plan</h3>
+        <ol>
+          <li><strong>Before class:</strong> read key terms and the summary, and find answers to the chapter questions</li>
+          <li><strong>In class:</strong> use symbols. ★ means review later, ! means especially important, ? means needs more explanation</li>
+          <li><strong>After class:</strong> review with the textbook, fill in the ★ items and answer the ? items</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>Referral resources</h3>
+        <ul>
+          <li>CAPS, counseling and psychological services <span class="missing">· link needed</span></li>
+          <li>CARE office <span class="missing">· link needed</span></li>
+          <li>UTFs and TAs for specific classes</li>
+          <li>Professor office hours</li>
+          <li>Tutoring <span class="missing">· link needed</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <h2>Work structure</h2>
+    <div class="grid">
+      <div class="panel">
+        <h3>Weekly rhythm</h3>
+        <ul>
+          <li><strong>Weekly team training</strong>: see your calendar</li>
+          <li><strong>Class availability</strong>: see your calendar</li>
+          <li><strong>Student meetings</strong>: 30 minutes, follow-ups about every 2 weeks</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>People</h3>
+        <ul>
+          <li><strong>Scheduling contact</strong>: scheduling and shifts</li>
+          <li><strong>Web contact</strong>: Modern Campus and Achieve</li>
+          <li><strong>Access contact</strong>: MyUSU access</li>
+        </ul>
+        <p class="missing">Names and contact details stay in your Drive, not on this public page.</p>
+      </div>
+      <div class="panel">
+        <h3>This semester's projects</h3>
+        <ul>
+          <li>Find 4 presentations this semester</li>
+          <li>Tabling for midterms</li>
+          <li>Review the Canvas course</li>
+          <li>Modern Campus projects and Academic Hub pages</li>
+          <li>Answer comments</li>
+          <li>Idea: a short quiz that matches students to resources</li>
+          <li>Idea: a study-tips app for students</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="todo">
+    <h2>Links to add</h2>
+    <p>Send Claude any of these and it will add them here along with the access level you choose: appointment page, meeting summary system, Canvas course, Banner, Modern Campus, Academic Hub pages, Big Blue EdSights, CAPS, CARE office, tutoring.</p>
+  </section>
+
+  <footer>Last updated 27 Sep 2026 · Built from your notes and your Peer Success Coach folder.</footer>
+</div>
