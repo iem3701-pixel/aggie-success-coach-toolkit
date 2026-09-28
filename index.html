@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aggie Success Coach Toolkit</title>
+<style>
+  :root{
+    --aggie:#0f2439;
+    --blue:#2472b5;
+    --blue2:#4d5f80;
+    --light:#eef4f8;
+    --paper:#ffffff;
+    --ink:#17212b;
+    --muted:#5f6b76;
+    --line:#d8e0e7;
+    --green:#2f7655;
+    --gold:#9a6a13;
+    --shadow:0 12px 30px rgba(15,36,57,.10);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color:var(--ink);
+    background:#f6f8fa;
+    line-height:1.45;
+  }
+  button,input,textarea{font:inherit}
+  a{color:inherit}
+  .topbar{
+    background:var(--aggie);
+    color:white;
+    padding:18px 22px;
+    position:sticky;
+    top:0;
+    z-index:20;
+    box-shadow:0 3px 14px rgba(0,0,0,.15)
+  }
+  .topbar-inner{
+    max-width:1220px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .mark{
+    width:42px;height:42px;border:2px solid rgba(255,255,255,.85);
+    border-radius:12px;display:grid;place-items:center;font-weight:800;letter-spacing:.04em
+  }
+  .brand h1{font-size:1.05rem;margin:0}
+  .brand p{margin:2px 0 0;color:#dfe8ef;font-size:.84rem}
+  .top-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{
+    border:0;border-radius:12px;padding:10px 14px;cursor:pointer;
+    font-weight:700;transition:.18s ease;text-decoration:none;display:inline-flex;
+    align-items:center;gap:7px;justify-content:center;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn-primary{background:var(--blue);color:white}
+  .btn-light{background:white;color:var(--aggie)}
+  .btn-soft{background:#e8f0f7;color:var(--aggie)}
+  .btn-ghost{background:transparent;color:inherit;border:1px solid var(--line)}
+  .btn-danger{background:#fff1f1;color:#8a3030;border:1px solid #efcaca}
+  main{max-width:1220px;margin:auto;padding:30px 22px 80px}
+  .hero{
+    background:linear-gradient(135deg,var(--aggie),#173b5e 75%);
+    color:white;border-radius:26px;padding:36px;box-shadow:var(--shadow);
+    display:grid;grid-template-columns:1.5fr .85fr;gap:28px;align-items:center
+  }
+  .hero h2{font-size:clamp(2rem,4vw,3.3rem);line-height:1.05;margin:0 0 12px}
+  .hero p{font-size:1.06rem;color:#e0e9f1;max-width:720px}
+  .hero-side{
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.17);
+    border-radius:20px;padding:20px
+  }
+  .hero-side strong{display:block;margin-bottom:9px}
+  .hero-side ol{margin:0;padding-left:20px;color:#eff5fa}
+  .section-head{
+    display:flex;justify-content:space-between;align-items:end;gap:16px;margin:34px 0 15px
+  }
+  .section-head h3{margin:0;font-size:1.45rem;color:var(--aggie)}
+  .section-head p{margin:5px 0 0;color:var(--muted)}
+  .search{
+    width:min(370px,100%);border:1px solid var(--line);border-radius:14px;
+    padding:12px 14px;background:white;outline:none
+  }
+  .search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(36,114,181,.13)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{
+    border:1px solid var(--line);background:white;border-radius:999px;padding:8px 12px;
+    cursor:pointer;color:#344250;font-weight:650
+  }
+  .chip.active{background:var(--aggie);color:white;border-color:var(--aggie)}
+  .grid{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px
+  }
+  .card{
+    background:white;border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;box-shadow:0 5px 16px rgba(15,36,57,.05);cursor:pointer;
+    transition:.18s ease;min-height:190px;display:flex;flex-direction:column
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#b8cad9}
+  .icon{
+    width:42px;height:42px;border-radius:12px;background:#e9f2f8;color:var(--aggie);
+    display:grid;place-items:center;font-size:1.25rem;margin-bottom:14px
+  }
+  .card h4{margin:0 0 8px;font-size:1.05rem;color:var(--aggie)}
+  .card p{margin:0;color:var(--muted);font-size:.93rem}
+  .tag{margin-top:auto;padding-top:14px;color:var(--blue);font-weight:700;font-size:.86rem}
+  .workspace{
+    margin-top:34px;background:white;border:1px solid var(--line);
+    border-radius:22px;padding:24px;box-shadow:var(--shadow)
+  }
+  .workspace-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .workspace h3{margin:0;color:var(--aggie)}
+  .workspace p{color:var(--muted)}
+  .step{
+    display:flex;gap:10px;align-items:flex-start;margin:10px 0
+  }
+  .step input{margin-top:5px}
+  textarea{
+    width:100%;min-height:150px;border:1px solid var(--line);border-radius:14px;padding:13px;
+    resize:vertical;outline:none;background:#fbfcfd
+  }
+  textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(36,114,181,.12)}
+  .note{font-size:.82rem;color:var(--muted)}
+  .resources-strip{
+    margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px
+  }
+  .quicklink{
+    text-decoration:none;background:white;border:1px solid var(--line);border-radius:14px;
+    padding:15px;display:block;font-weight:750;color:var(--aggie)
+  }
+  .quicklink span{display:block;font-weight:500;color:var(--muted);font-size:.83rem;margin-top:4px}
+  dialog{
+    border:0;border-radius:24px;padding:0;width:min(820px,92vw);max-height:88vh;
+    box-shadow:0 30px 80px rgba(0,0,0,.28);overflow:hidden
+  }
+  dialog::backdrop{background:rgba(7,22,34,.62);backdrop-filter:blur(3px)}
+  .modal-head{
+    padding:24px 26px 18px;background:var(--aggie);color:white;display:flex;
+    align-items:flex-start;justify-content:space-between;gap:20px
+  }
+  .modal-head h3{margin:0;font-size:1.55rem}
+  .modal-head p{margin:6px 0 0;color:#dfe8ef}
+  .close{
+    width:38px;height:38px;border:1px solid rgba(255,255,255,.28);background:transparent;
+    color:white;border-radius:10px;font-size:1.2rem;cursor:pointer
+  }
+  .modal-body{padding:24px 26px 28px;overflow:auto;max-height:calc(88vh - 105px)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .panel{border:1px solid var(--line);border-radius:15px;padding:16px;background:#fbfcfd}
+  .panel h4{margin:0 0 9px;color:var(--aggie)}
+  .panel ul{margin:0;padding-left:20px}
+  .panel li{margin:7px 0}
+  .resource{
+    border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px
+  }
+  .resource small{display:block;color:var(--muted);margin-top:3px}
+  .resource a{white-space:nowrap}
+  .actionbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .empty{
+    grid-column:1/-1;text-align:center;padding:35px;background:white;border:1px dashed var(--line);
+    border-radius:18px;color:var(--muted)
+  }
+  footer{max-width:1220px;margin:0 auto 35px;padding:0 22px;color:var(--muted);font-size:.83rem}
+  .status{font-size:.83rem;color:var(--green);font-weight:700;min-height:1.2em}
+  @media(max-width:900px){
+    .hero,.workspace-grid{grid-template-columns:1fr}
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .resources-strip{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:620px){
+    .topbar-inner{align-items:flex-start}
+    .brand p{display:none}
+    main{padding:20px 14px 60px}
+    .hero{padding:26px 20px}
+    .grid,.two,.resources-strip{grid-template-columns:1fr}
+    .section-head{align-items:stretch;flex-direction:column}
+    .search{width:100%}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="mark">USU</div>
+      <div>
+        <h1>Aggie Success Coach Toolkit</h1>
+        <p>Student-centered appointment guide</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn btn-light" onclick="document.getElementById('workspace').scrollIntoView({behavior:'smooth'})">Action Plan</button>
+      <a class="btn btn-primary" href="https://www.usu.edu/academic-support/" target="_blank" rel="noopener">USU Support Hub ↗</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div style="font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#bcd2e4;font-size:.78rem">Start with the student</div>
+      <h2>What feels hardest right now?</h2>
+      <p>Choose the challenge that sounds closest. We’ll look at a few practical next steps and connect you with the right USU support.</p>
+    </div>
+    <div class="hero-side">
+      <strong>A simple coaching flow</strong>
+      <ol>
+        <li>Name the challenge.</li>
+        <li>Choose one strategy to try.</li>
+        <li>Connect to a resource if useful.</li>
+        <li>Leave with a clear next step.</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <div>
+      <h3>Choose a challenge</h3>
+      <p>Students can point to a card, or you can search together.</p>
+    </div>
+    <input id="search" class="search" type="search" placeholder="Search: tests, money, professor, GPA..." aria-label="Search challenges">
+  </div>
+
+  <div class="chips" id="chips">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="planning">Planning</button>
+    <button class="chip" data-filter="learning">Learning</button>
+    <button class="chip" data-filter="courses">Course support</button>
+    <button class="chip" data-filter="campus">Campus & life</button>
+  </div>
+
+  <section class="grid" id="challengeGrid"></section>
+
+  <section id="workspace" class="workspace">
+    <div class="workspace-grid">
+      <div>
+        <h3>Today’s action plan</h3>
+        <p>Keep it small. One to three realistic actions are usually more useful than a long list.</p>
+        <label class="step"><input type="checkbox"><span><strong>Step 1:</strong> <span contenteditable="true">Choose one concrete next action</span></span></label>
+        <label class="step"><input type="checkbox"><span><strong>Step 2:</strong> <span contenteditable="true">Decide when or where it will happen</span></span></label>
+        <label class="step"><input type="checkbox"><span><strong>Step 3:</strong> <span contenteditable="true">Identify support or accountability</span></span></label>
+        <div class="actionbar">
+          <button class="btn btn-primary" onclick="copyPlan()">Copy plan</button>
+          <button class="btn btn-ghost" onclick="resetWorkspace()">Reset session</button>
+        </div>
+        <div class="status" id="copyStatus"></div>
+      </div>
+      <div>
+        <h3>Appointment scratchpad</h3>
+        <p>Use this for temporary notes while you talk.</p>
+        <textarea id="notes" placeholder="Example: Main challenge is getting started on chemistry. Try a 20-minute start block after lunch on Tuesday and attend tutoring Thursday."></textarea>
+        <div class="note">Privacy reminder: avoid entering student names, A-numbers, diagnoses, or other sensitive information. This prototype does not intentionally save the scratchpad after the page is refreshed.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <div>
+      <h3>Quick USU links</h3>
+      <p>Useful destinations during an appointment.</p>
+    </div>
+  </div>
+  <section class="resources-strip">
+    <a class="quicklink" target="_blank" rel="noopener" href="https://www.usu.edu/able/academic-success-coaches">Success Coaching<span>Coaching information and current services</span></a>
+    <a class="quicklink" target="_blank" rel="noopener" href="https://www.usu.edu/able/tutoring/">Tutoring<span>Subject, online, in-person, and area-specific options</span></a>
+    <a class="quicklink" target="_blank" rel="noopener" href="https://www.usu.edu/able/pass/">PASS<span>Peer-assisted study sessions for participating courses</span></a>
+    <a class="quicklink" target="_blank" rel="noopener" href="https://www.usu.edu/academic-support/">Academic Support Hub<span>Academic, wellness, community, finance, and tech links</span></a>
+  </section>
+</main>
+
+<dialog id="detailDialog">
+  <div class="modal-head">
+    <div>
+      <h3 id="modalTitle"></h3>
+      <p id="modalSubtitle"></p>
+    </div>
+    <button class="close" aria-label="Close" onclick="detailDialog.close()">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="two">
+      <div class="panel">
+        <h4>Questions to explore</h4>
+        <ul id="modalQuestions"></ul>
+      </div>
+      <div class="panel">
+        <h4>Try this next</h4>
+        <ul id="modalStrategies"></ul>
+      </div>
+    </div>
+    <h4 style="margin:22px 0 8px;color:var(--aggie)">Helpful USU resources</h4>
+    <div id="modalResources"></div>
+    <div class="actionbar">
+      <button class="btn btn-primary" onclick="addToNotes()">Add to appointment notes</button>
+      <button class="btn btn-soft" onclick="detailDialog.close();document.getElementById('workspace').scrollIntoView({behavior:'smooth'})">Build action plan</button>
+    </div>
+  </div>
+</dialog>
+
+<footer>
+  This is an independent coaching aid built around publicly available Utah State University resources. Resource availability, schedules, and policies can change, so use the linked USU pages as the current source of truth.
+</footer>
+
+<script>
+const items = [
+  {
+    id:"overwhelmed", icon:"🧭", title:"I’m overwhelmed", blurb:"Too many tasks, classes, or deadlines are competing for attention.", cat:["planning","campus"],
+    questions:["What feels most urgent today?","Which deadlines are truly fixed?","What would make this week feel more manageable?"],
+    strategies:["Make one list, then sort by urgent / important / can wait.","Pick the next 20-minute action instead of solving the whole semester.","Put the top 2–3 tasks onto a weekly plan."],
+    resources:[
+      ["Time Management","Planning tools, study-hour guidance, and calendars.","https://www.usu.edu/academic-support/time/"],
+      ["Academic Success Coaching","Goal-setting, habits, accountability, and support.","https://www.usu.edu/able/academic-success-coaches"]
+    ]
+  },
+  {
+    id:"procrastination", icon:"▶️", title:"I keep procrastinating", blurb:"Getting started is the hardest part, even when the task matters.", cat:["planning"],
+    questions:["What usually happens right before you avoid the task?","Is the task unclear, unpleasant, too large, or easy to forget?","What is the smallest possible starting step?"],
+    strategies:["Shrink the start: commit to 10–20 minutes, not finishing.","Define the first visible action: open Canvas, find the prompt, write one sentence.","Use another person’s presence for accountability or body doubling."],
+    resources:[
+      ["Time Management & Procrastination","USU planning and procrastination support.","https://www.usu.edu/academic-support/time/"],
+      ["Success Coaching / Body Doubling","Check the current coaching page for body-doubling information and schedule.","https://www.usu.edu/able/academic-success-coaches"],
+      ["Habits of Mind","Courses focused on productivity, resilience, and learning techniques.","https://www.usu.edu/able/habits-of-mind"]
+    ]
+  },
+  {
+    id:"time", icon:"🗓️", title:"I can’t manage my time", blurb:"The week fills up and schoolwork gets squeezed out.", cat:["planning"],
+    questions:["Where does your time currently go?","When are you most focused during the day?","Which class needs protected study time first?"],
+    strategies:["Block fixed commitments first, then schedule study blocks.","Plan by week rather than relying on memory each day.","Give difficult work a specific time and location."],
+    resources:[
+      ["Manage Your Time","USU time-management tools and planning calendars.","https://www.usu.edu/academic-support/time/"],
+      ["USU 1020 / Habits of Mind","Productivity, self-regulation, motivation, organization, and planning.","https://www.usu.edu/able/habits-of-mind"]
+    ]
+  },
+  {
+    id:"study", icon:"🧠", title:"I don’t know how to study", blurb:"Time is being spent studying, but the material is not sticking.", cat:["learning"],
+    questions:["What do you actually do during a study session?","How are you checking whether you can recall the material without notes?","What does the exam ask you to do with the information?"],
+    strategies:["Shift from rereading to retrieval: quiz yourself without notes.","Practice the kind of thinking the exam requires—problems, explanations, or applications.","Review across multiple shorter sessions instead of one long cram session."],
+    resources:[
+      ["Academic Support Hub","USU’s prepare → attend → review → apply → evaluate framework.","https://www.usu.edu/academic-support/"],
+      ["Habits of Mind","Learning-technique and academic-success courses.","https://www.usu.edu/able/habits-of-mind"],
+      ["Tutoring","Find course and subject-specific support.","https://www.usu.edu/able/tutoring/"]
+    ]
+  },
+  {
+    id:"notes", icon:"✍️", title:"My notes aren’t helping", blurb:"Notes are incomplete, hard to use, or never reviewed.", cat:["learning"],
+    questions:["What do your notes look like after class?","Can you turn your notes into questions?","When do you review them after class?"],
+    strategies:["Capture main ideas and relationships instead of every word.","Add questions or a short summary after class.","Turn notes into self-quizzes or a study guide."],
+    resources:[
+      ["Note-Taking Tips","USU guidance on effective notes, Cornell notes, and active listening.","https://www.usu.edu/academic-support/note_taking/"]
+    ]
+  },
+  {
+    id:"reading", icon:"📚", title:"I read but don’t remember it", blurb:"Textbook reading takes a long time and comprehension is low.", cat:["learning"],
+    questions:["What is your purpose for this reading?","Do you preview headings, summaries, figures, or questions first?","How are you checking understanding afterward?"],
+    strategies:["Preview the chapter and turn headings into questions.","Pause to explain sections in your own words.","After reading, quiz yourself before looking back at the text."],
+    resources:[
+      ["Reading Comprehension","USU active-reading guidance for before, during, and after reading.","https://www.usu.edu/academic-support/reading/"],
+      ["Habits of Mind","Includes a course focused on reading college texts.","https://www.usu.edu/able/habits-of-mind"]
+    ]
+  },
+  {
+    id:"tests", icon:"📝", title:"Tests don’t go well", blurb:"Studying feels fine, but exam performance does not match the effort.", cat:["learning","courses"],
+    questions:["How did you prepare for the last test?","Were misses mostly knowledge, application, timing, or reading the question?","Have you reviewed the exam for patterns?"],
+    strategies:["Use practice questions and closed-note recall before the exam.","Simulate test conditions for part of your studying.","Review errors by type and change the next study plan accordingly."],
+    resources:[
+      ["Preparing for Tests","USU test-preparation and test-taking support.","https://www.usu.edu/academic-support/test/"],
+      ["PASS","Peer-led study sessions for participating courses.","https://www.usu.edu/able/pass/"],
+      ["Tutoring","Subject-specific academic support.","https://www.usu.edu/able/tutoring/"]
+    ]
+  },
+  {
+    id:"behind", icon:"📉", title:"I’m behind in a class", blurb:"Assignments or concepts have piled up and catching up feels unclear.", cat:["courses","planning"],
+    questions:["What work is still recoverable?","What upcoming work has the biggest impact?","Have you talked with the instructor about your situation and options?"],
+    strategies:["Separate past work from upcoming work so new deadlines do not keep slipping.","Prioritize by impact and feasibility, not just by oldest task.","Create a short instructor communication plan and ask specific questions."],
+    resources:[
+      ["Communication","USU guidance for communicating with professors and peers.","https://www.usu.edu/academic-support/communication/"],
+      ["Tutoring","Find support for difficult course content.","https://www.usu.edu/able/tutoring/"],
+      ["Academic Success Coaching","Create a realistic recovery plan with support.","https://www.usu.edu/able/academic-success-coaches"]
+    ]
+  },
+  {
+    id:"professor", icon:"💬", title:"I need to talk to a professor", blurb:"I’m unsure what to say, ask, or write.", cat:["courses"],
+    questions:["What outcome are you hoping for?","What facts does the professor need to understand?","What specific question or request can you make?"],
+    strategies:["Be brief, respectful, and specific about the situation.","Ask a clear question rather than sending only an explanation.","Use office hours when a conversation would be easier than a long email."],
+    resources:[
+      ["Communicating with Professors & Peers","USU communication guidance.","https://www.usu.edu/academic-support/communication/"]
+    ]
+  },
+  {
+    id:"tutoring", icon:"🤝", title:"I need help with a class", blurb:"I need someone to explain material or practice with me.", cat:["courses"],
+    questions:["Which course or topic is the main problem?","Would drop-in, appointment, online, or group help fit best?","Does the course have PASS?"],
+    strategies:["Bring a specific question, problem, or concept to tutoring.","Use tutoring before the week of the exam when possible.","Pair tutoring with your own retrieval practice afterward."],
+    resources:[
+      ["USU Tutoring","Math, writing, online, and area-specific options.","https://www.usu.edu/able/tutoring/"],
+      ["PASS","Peer-assisted sessions for participating courses.","https://www.usu.edu/able/pass/"]
+    ]
+  },
+  {
+    id:"gpa", icon:"📊", title:"I’m worried about my GPA / standing", blurb:"Grades are low and I need to understand what happens next.", cat:["courses","campus"],
+    questions:["What is your current USU GPA and semester trend?","Which courses are driving the concern?","What support is already in place?"],
+    strategies:["Look at the official academic-standing information together.","Focus the plan on current-semester behaviors and the highest-impact courses.","Coordinate with academic advising when policy or degree decisions are involved."],
+    resources:[
+      ["Academic Standing","Official USU explanation of good standing, alert, notice, and pause.","https://www.usu.edu/able/academic-standing"],
+      ["Academic Support Hub","Connect to advising, coaching, tutoring, and other supports.","https://www.usu.edu/academic-support/"]
+    ]
+  },
+  {
+    id:"access", icon:"♿", title:"I need accessibility support", blurb:"A disability or access barrier is affecting school participation.", cat:["campus"],
+    questions:["What part of the academic environment is creating the barrier?","Have you connected with the Disability Resource Center?","Is there an immediate course issue that also needs instructor communication?"],
+    strategies:["Use the DRC as the university resource for accommodation processes.","Keep the focus on access needs rather than asking the student to disclose more than necessary.","Pair accommodations with academic skill support when useful."],
+    resources:[
+      ["Disability Resource Center","USU’s accessibility and accommodation resource.","https://www.usu.edu/drc/"]
+    ]
+  },
+  {
+    id:"money", icon:"💵", title:"Money is making school harder", blurb:"Budget, scholarships, work, or basic expenses are affecting academics.", cat:["campus"],
+    questions:["Is the main issue budgeting, financial aid, scholarships, employment, or basic needs?","Is there an urgent deadline or payment issue?","Would connecting to a campus specialist reduce the load?"],
+    strategies:["Identify the exact financial pressure before choosing a resource.","Use USU financial support resources rather than trying to solve policy questions in the coaching appointment.","Build the academic plan around realistic work and life demands."],
+    resources:[
+      ["Student Money Management Center","USU budgeting and money-management support.","https://www.usu.edu/financial-support/smmc"],
+      ["Scholarships","Current USU scholarship information.","https://www.usu.edu/financial-support/scholarships/"],
+      ["Academic Support Hub","Links to financial, employment, and basic-needs resources.","https://www.usu.edu/academic-support/"]
+    ]
+  },
+  {
+    id:"personal", icon:"🌱", title:"Personal stress is affecting school", blurb:"Life outside class is making it hard to focus or keep up.", cat:["campus"],
+    questions:["What is getting in the way of school right now?","What kind of support would feel most useful—academic planning, wellness, or practical help?","What is one academic expectation we can simplify this week?"],
+    strategies:["Reduce the academic plan to the most important next steps.","Connect the student to the appropriate professional campus resource when the issue is outside a coach’s role.","Avoid making the appointment about fixing everything at once."],
+    resources:[
+      ["Counseling and Prevention Services","USU counseling and prevention resources.","https://www.usu.edu/aggiewellness/caps/"],
+      ["CARE Office","Support and referrals for students facing difficult circumstances.","https://www.usu.edu/intervention/care-office"],
+      ["Academic Support Hub","Wellness, community, academic, and basic-needs resources.","https://www.usu.edu/academic-support/"]
+    ]
+  },
+  {
+    id:"leave", icon:"⏸️", title:"I’m considering taking time away", blurb:"I may need a semester or more away from USU.", cat:["campus"],
+    questions:["What is leading you to consider a break?","Have you talked with an academic advisor about degree and registration implications?","What official steps need to happen before leaving?"],
+    strategies:["Use the official USU leave information rather than relying on memory.","Connect with advising before making academic decisions.","Clarify what the student wants to preserve or prepare for when returning."],
+    resources:[
+      ["Notification of Leave","USU information and process for taking a semester or more away.","https://www.usu.edu/able/nol/"],
+      ["Academic Support Hub","Additional advising and support resources.","https://www.usu.edu/academic-support/"]
+    ]
+  }
+];
+
+const grid = document.getElementById("challengeGrid");
+const search = document.getElementById("search");
+const chips = [...document.querySelectorAll(".chip")];
+const detailDialog = document.getElementById("detailDialog");
+let filter = "all";
+let current = null;
+
+function render(){
+  const q = search.value.trim().toLowerCase();
+  const shown = items.filter(x => (filter==="all" || x.cat.includes(filter)) &&
+    (x.title+" "+x.blurb+" "+x.questions.join(" ")+" "+x.strategies.join(" ")).toLowerCase().includes(q));
+  grid.innerHTML = "";
+  if(!shown.length){
+    grid.innerHTML = '<div class="empty">No exact match. Try a broader word, or open the USU Academic Support Hub.</div>';
+    return;
+  }
+  shown.forEach(x=>{
+    const el = document.createElement("article");
+    el.className="card";
+    el.tabIndex=0;
+    el.innerHTML=`<div class="icon">${x.icon}</div><h4>${x.title}</h4><p>${x.blurb}</p><div class="tag">Explore this challenge →</div>`;
+    el.onclick=()=>openItem(x);
+    el.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openItem(x)}};
+    grid.appendChild(el);
+  });
+}
+
+function openItem(x){
+  current=x;
+  document.getElementById("modalTitle").textContent=x.title;
+  document.getElementById("modalSubtitle").textContent=x.blurb;
+  document.getElementById("modalQuestions").innerHTML=x.questions.map(v=>`<li>${v}</li>`).join("");
+  document.getElementById("modalStrategies").innerHTML=x.strategies.map(v=>`<li>${v}</li>`).join("");
+  document.getElementById("modalResources").innerHTML=x.resources.map(r=>`
+    <div class="resource">
+      <div><strong>${r[0]}</strong><small>${r[1]}</small></div>
+      <a class="btn btn-soft" href="${r[2]}" target="_blank" rel="noopener">Open ↗</a>
+    </div>`).join("");
+  detailDialog.showModal();
+}
+
+function addToNotes(){
+  if(!current) return;
+  const notes=document.getElementById("notes");
+  const addition=`Challenge: ${current.title}\nPossible next step: ${current.strategies[0]}\n`;
+  notes.value=(notes.value ? notes.value.trim()+"\n\n" : "")+addition;
+  detailDialog.close();
+  document.getElementById("workspace").scrollIntoView({behavior:"smooth"});
+}
+
+async function copyPlan(){
+  const steps=[...document.querySelectorAll(".step")].map((x,i)=>`${i+1}. ${x.querySelector("span span").innerText.trim()}`);
+  const note=document.getElementById("notes").value.trim();
+  const text=`Today’s action plan\n${steps.join("\n")}${note?`\n\nNotes\n${note}`:""}`;
+  try{
+    await navigator.clipboard.writeText(text);
+    document.getElementById("copyStatus").textContent="Copied to clipboard.";
+  }catch(e){
+    document.getElementById("copyStatus").textContent="Copy is blocked by this browser. Select the text manually.";
+  }
+}
+
+function resetWorkspace(){
+  document.getElementById("notes").value="";
+  document.querySelectorAll(".step input").forEach(x=>x.checked=false);
+  const defaults=["Choose one concrete next action","Decide when or where it will happen","Identify support or accountability"];
+  document.querySelectorAll(".step span span").forEach((x,i)=>x.innerText=defaults[i]);
+  document.getElementById("copyStatus").textContent="Session workspace cleared.";
+}
+
+search.addEventListener("input",render);
+chips.forEach(c=>c.addEventListener("click",()=>{
+  chips.forEach(x=>x.classList.remove("active"));
+  c.classList.add("active");
+  filter=c.dataset.filter;
+  render();
+}));
+detailDialog.addEventListener("click",e=>{
+  const rect=detailDialog.getBoundingClientRect();
+  const outside=e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom;
+  if(outside) detailDialog.close();
+});
+render();
+</script>
+</body>
+</html>
